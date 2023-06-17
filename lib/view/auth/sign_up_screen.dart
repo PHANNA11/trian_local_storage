@@ -2,7 +2,6 @@ import 'dart:developer';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:local_storage/view/home/home_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../global/constant/global.dart';

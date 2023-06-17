@@ -3,10 +3,10 @@ import 'dart:developer';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:local_storage/view/auth/sign_up_screen.dart';
-import 'package:local_storage/view/home/home_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../global/constant/global.dart';
+import '../home/view/home_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
