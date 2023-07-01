@@ -23,18 +23,19 @@ class ProductDB {
     );
   }
 
-  Future<List<ProductModel>> getCategory() async {
+  Future<List<ProductModel>> getProduct() async {
     var db = await initDatabase();
     List<Map<String, dynamic>> result = await db.query(productTable);
     return result.map((e) => ProductModel.fromJson(e)).toList();
   }
 
-  Future<void> insertCategory(ProductModel pro) async {
+  Future<void> insertProduct(ProductModel pro) async {
     var db = await initDatabase();
     await db.insert(productTable, pro.toMap());
+    print('Add product');
   }
 
-  Future<void> updateCategory(ProductModel pro) async {
+  Future<void> updateProduct(ProductModel pro) async {
     var db = await initDatabase();
     await db.update(
       productTable,
@@ -44,7 +45,7 @@ class ProductDB {
     );
   }
 
-  Future<void> deleteCategory(int proId) async {
+  Future<void> deleteProduct(int proId) async {
     var db = await initDatabase();
     await db.delete(
       productTable,

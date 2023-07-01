@@ -5,6 +5,7 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:local_storage/view/home/database/category_con.dart';
 import 'package:local_storage/view/home/model/category_model.dart';
 import 'package:local_storage/view/home/view/category/category_screen.dart';
+import 'package:local_storage/view/home/view/product/crud_product_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -74,7 +75,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         context,
                         MaterialPageRoute(
                           builder: (context) =>
-                              CategoryScreen(screenType: 'Category'),
+                              CrudProductScreen(screenType: 'PRODUCT'),
                         ));
                   },
                   leading: const CircleAvatar(
@@ -102,7 +103,7 @@ class _HomeScreenState extends State<HomeScreen> {
           flex: 1,
           child: Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Container(
+            child: SizedBox(
               width: double.infinity,
               //   color: Colors.red,
               child: ListView.builder(
@@ -169,7 +170,7 @@ class _HomeScreenState extends State<HomeScreen> {
           Positioned(
               bottom: 0,
               left: 20,
-              child: Container(
+              child: SizedBox(
                 height: 100,
                 width: 100,
                 child: Column(
