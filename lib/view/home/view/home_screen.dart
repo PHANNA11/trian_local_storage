@@ -6,6 +6,10 @@ import 'package:local_storage/view/home/database/category_con.dart';
 import 'package:local_storage/view/home/model/category_model.dart';
 import 'package:local_storage/view/home/view/category/category_screen.dart';
 import 'package:local_storage/view/home/view/product/crud_product_screen.dart';
+import 'package:local_storage/view/home/view/product/pages/list_filter_product.dart';
+
+import '../database/product_con.dart';
+import '../model/product_model.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -24,11 +28,21 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
+  List<ProductModel> liistProduct = [];
+  getProductData() async {
+    await ProductDB().getProduct().then((value) {
+      setState(() {
+        liistProduct = value;
+      });
+    });
+  }
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     getCategoryData();
+    getProductData();
   }
 
   @override
@@ -128,7 +142,13 @@ class _HomeScreenState extends State<HomeScreen> {
                     style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
                   ),
                   TextButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => FilterProductr(),
+                            ));
+                      },
                       child: Text(
                         'See All'.toUpperCase(),
                         style: const TextStyle(
@@ -143,7 +163,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   shrinkWrap: false,
                   childAspectRatio: 12 / 20,
                   crossAxisCount: 2,
-                  children: List.generate(10, (index) => buildProductCard()),
+                  children: List.generate(liistProduct.length,
+                      (index) => buildProductCard(pro: liistProduct[index])),
                 ),
               ),
             ],
@@ -153,7 +174,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget buildProductCard() {
+  Widget buildProductCard({ProductModel? pro}) {
     return Padding(
       padding: const EdgeInsets.all(4.0),
       child: Stack(
@@ -162,10 +183,8 @@ class _HomeScreenState extends State<HomeScreen> {
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
                 color: Colors.blue,
-                image: const DecorationImage(
-                    fit: BoxFit.cover,
-                    image: NetworkImage(
-                        'https://static.onecms.io/wp-content/uploads/sites/43/2023/01/30/70935-taqueria-style-tacos-mfs-3x2-35.jpg'))),
+                image: DecorationImage(
+                    fit: BoxFit.cover, image: AssetImage(pro!.image))),
           ),
           Positioned(
               bottom: 0,
@@ -174,25 +193,26 @@ class _HomeScreenState extends State<HomeScreen> {
                 height: 100,
                 width: 100,
                 child: Column(
-                  children: const [
+                  children: [
                     Text(
-                      'Tuki Food',
-                      style: TextStyle(
+                      pro.name,
+                      style: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
                           color: Colors.white),
                     ),
                     Chip(
                       label: Text(
-                        '5.0',
-                        style: TextStyle(
+                        pro.rating.toStringAsFixed(1),
+                        style: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      avatar: Icon(
+                      avatar: const Icon(
                         Icons.star,
                         size: 20,
+                        color: Color.fromARGB(255, 243, 110, 9),
                       ),
                     )
                   ],
@@ -206,20 +226,30 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget buildCategory(CategoryModel categoryModel) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
-      child: Column(
-        children: [
-          Container(
-            height: 70,
-            width: 80,
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20),
-                color: Colors.yellow,
-                image: const DecorationImage(
-                    fit: BoxFit.cover,
-                    image: AssetImage('assets/icons/conch-close.jpg'))),
-          ),
-          Text(categoryModel.name),
-        ],
+      child: GestureDetector(
+        onTap: () {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) =>
+                    FilterProductr(search: categoryModel.name),
+              ));
+        },
+        child: Column(
+          children: [
+            Container(
+              height: 70,
+              width: 80,
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20),
+                  color: Colors.yellow,
+                  image: const DecorationImage(
+                      fit: BoxFit.cover,
+                      image: AssetImage('assets/icons/conch-close.jpg'))),
+            ),
+            Text(categoryModel.name),
+          ],
+        ),
       ),
     );
   }

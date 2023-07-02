@@ -29,6 +29,13 @@ class ProductDB {
     return result.map((e) => ProductModel.fromJson(e)).toList();
   }
 
+  Future<List<ProductModel>> filterProduct(String? search) async {
+    var db = await initDatabase();
+    List<Map<String, dynamic>> result = await db.rawQuery(
+        'SELECT * FROM $productTable WHERE $fProCategory=?', [search]);
+    return result.map((e) => ProductModel.fromJson(e)).toList();
+  }
+
   Future<void> insertProduct(ProductModel pro) async {
     var db = await initDatabase();
     await db.insert(productTable, pro.toMap());

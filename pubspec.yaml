@@ -41,6 +41,8 @@ dependencies:
   flutter_slidable: ^3.0.0
   dropdown_button2: ^2.1.4
   image_picker: ^0.8.7+4
+  custom_refresh_indicator: ^2.0.1
+
 
 dev_dependencies:
   flutter_test:

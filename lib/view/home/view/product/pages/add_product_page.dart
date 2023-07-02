@@ -12,7 +12,8 @@ import '../../../database/category_con.dart';
 import '../../../model/category_model.dart';
 
 class AddProductPage extends StatefulWidget {
-  const AddProductPage({super.key});
+  AddProductPage({super.key, this.product});
+  ProductModel? product;
 
   @override
   State<AddProductPage> createState() => _AddProductPageState();
@@ -28,12 +29,39 @@ class _AddProductPageState extends State<AddProductPage> {
     });
   }
 
+  void setDataUpdate() {
+    setState(() {
+      selectCategoryntroller.text = widget.product!.category;
+      nameController.text = widget.product!.name;
+      priceController.text = widget.product!.price.toString();
+      rateController.text = widget.product!.rating.toString();
+      image = File(widget.product!.image);
+      // int index = categorys
+      //     .indexWhere((element) => element.name == widget.product!.category);
+      // categoryModel = categorys[index];
+    });
+  }
+
+  void clearData() {
+    selectCategoryntroller.text = '';
+    nameController.text = '';
+    priceController.text = '';
+    rateController.text = '';
+    categoryModel = null;
+    image = null;
+  }
+
   File? image;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     getCategoryData();
+    if (widget.product != null) {
+      setDataUpdate();
+    } else {
+      clearData();
+    }
   }
 
   TextEditingController selectCategoryntroller = TextEditingController();
@@ -312,13 +340,25 @@ class _AddProductPageState extends State<AddProductPage> {
           padding: const EdgeInsets.all(8.0),
           child: GestureDetector(
             onTap: () async {
-              await ProductDB().insertProduct(ProductModel(
-                  category: categoryModel!.name,
-                  id: DateTime.now().microsecondsSinceEpoch,
-                  image: image!.path,
-                  name: nameController.text,
-                  rating: double.parse(rateController.text),
-                  price: double.parse(priceController.text)));
+              widget.product == null
+                  ? await ProductDB().insertProduct(ProductModel(
+                      category: categoryModel!.name,
+                      id: DateTime.now().microsecondsSinceEpoch,
+                      image: image!.path,
+                      name: nameController.text,
+                      rating: double.parse(rateController.text),
+                      price: double.parse(priceController.text)))
+                  : await ProductDB()
+                      .updateProduct(ProductModel(
+                          category: selectCategoryntroller.text,
+                          id: widget.product!.id,
+                          image: image!.path,
+                          name: nameController.text,
+                          rating: double.parse(rateController.text),
+                          price: double.parse(priceController.text)))
+                      .whenComplete(() {
+                      Navigator.pop(context);
+                    });
             },
             child: Container(
               height: 60,
